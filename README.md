@@ -35,7 +35,7 @@ Adjust the PCR banks to your needs. You will be propted for your current LUKS pa
 
 ### 2. Add TPM device option to /etc/crypttab volume entries
 
-Assuming your `/etc/crypttab` is already populated, add `tpm2-device=auto` for each for each secondary LUKS volume. For example:
+Assuming your `/etc/crypttab` is already populated, add `tpm2-device=auto` for each secondary LUKS volume. For example:
 
 ```
 nvme1n1p1_crypt UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx none luks,tpm2-device=auto,discard
