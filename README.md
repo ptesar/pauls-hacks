@@ -1,20 +1,27 @@
-# luks-clevis-initramfs-tpm2-multipartition-unlock
-Simplified guide to enable auto unlock multiple luks partitions with initramfs and clevis on boot on debian 12 systems.
+# Unlock primary and secondary LUKS volumes on boot with TPM
 
-## Who is this for
+Simplified guide to enable auto unlock multiple luks volumes with clevis and systemd-cryptenroll on boot.
 
-Anyone who needs to unlock multiple LUKS partitions on Debian 12 systems without switching from initramfs to dracut.
+## Who is it for
+
+Anyone who needs to **automatically unlock multiple LUKS partitions with TPM on Debian 12 systems** without switching from initramfs to dracut. This guide is likely applicable to other debian based distros as well.
 
 ## Background
 
 The workaround addresses the following limitations of buggy implementations of LUKS unlocking with TPM on boot:
 
-1. Clevis unlocks only the root partition on boot with TPM, secondary partitions require passphrase prompts
-2. Interestingly systemd-cryptenroll unlocks only secondary partions due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition
+1. **Clevis unlocks only the root partition** on boot with TPM, secondary partitions require passphrase prompts
+2. Interestingly **systemd-cryptenroll unlocks only secondary partions** due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition
+
+If you are in a situation like me where you cannot move away from default initramfs to dracut, after many burned hours you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only the primary volume encrypted with LUKS, and systemd-cryptenroll works generally well in setups where the primary volume is either unencrypted or the prompt for one primary passphrase is part of strategy. What if you need both?
 
 ## Workaround
 
-If you are in a situation like me where you cannot move away from default initramfs in favor of dracut, you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only the primary volume encrypted with LUKS, and systemd-cryptenroll works generally well in setups where the primary volume is either unencrypted or the prompt for one primary passphrase is part of strategy. What if you need both? The trick is to simply use clevis and systemd-cryptenroll simultaneously. As it turns out, they have no problem co-existing and both executing in initramfs. 
+The party trick is to simply **use clevis and systemd-cryptenroll simultaneously** for primary and secondery LUKS volumes respecively. As it turns out, clevis and systemd-cryptenroll have no problem co-existing and both executing in initramfs during boot.
+
+## Disclaimer
+
+While none of the outlined steps modify the underlying file systems, they do make substantial changes to boot configuration and can in theory result in a bricked OS, especially on non-standard kernels and otehrwise irregular partitioning schemes. Goes without saying that you should backup everything if you are touching volumes with data you can't afford to lose. 
 
 ### 1. Use systemd-cryptenroll for secondary partitions
 
