@@ -36,7 +36,7 @@ nvme1n1p1_crypt UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx none luks,tpm2-device=
 
 The name and UUID should match your specific volumes. Skip the primary LUKS volume, we will deal with that one later.
 
-### 3. Rebuild the initramfs
+### 3. Update initramfs
 
 Once you enroll all secondary LUKS volumes with `systemd-cryptenroll` and update the `/etc/crypttab` file, build the initramfs:
 
@@ -61,7 +61,17 @@ What's important here is that we are not downloading and using dracut that would
 We do this step only for the primary LUKS volume, not already covered by `systemd-cryptenroll`:
 
 ```
-sudo clevis luks bind -d /dev/nvme2n1p3 tpm2 '{"key":"rsa", "pcr_bank":"sha256", "pcr_ids":"1,7"}' <<< "your-secret-phrase-here"
+sudo clevis luks bind -d /dev/nvme2n1p3 tpm2 '{"key":"rsa", "pcr_bank":"sha256", "pcr_ids":"1,7"}'
 ```
 
-The device should match your specific primary LUKS volume, `/dev/nvme2n1p3` refects general setup of nowadays on systems with nvme storage. The `"key":"rsa"` parameter is optional on most systems.
+You will prompted for the passphrase. The device should match your specific primary LUKS volume, `/dev/nvme2n1p3` refects general setup of nowadays on systems with nvme storage. The `"key":"rsa"` parameter is optional on most systems.
+
+### 6. Update initramfs
+
+Once you bind the primary LUKS volume with clevis update the initramfs:
+
+```
+sudo update-initramfs -u
+```
+
+Confirm that the system auto unlocks all LUKS volumes works by rebboting your system.
