@@ -10,14 +10,14 @@ Anyone who needs to **automatically unlock multiple LUKS partitions with TPM on 
 
 The workaround addresses the following limitations of buggy implementations of LUKS unlocking with TPM on boot:
 
-1. **Clevis unlocks only the root partition** on boot with TPM, secondary partitions require passphrase prompts
-2. Interestingly **systemd-cryptenroll unlocks only secondary partions** due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition
+1. **Clevis unlocks only the root file system volume** on boot with TPM, secondary LUKS volumes require passphrase prompts
+2. Interestingly **systemd-cryptenroll unlocks only secondary volumes** due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for primary filesystem volume
 
-If you are in a situation like me where you cannot move away from default initramfs to dracut, after many burned hours you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only the primary volume encrypted with LUKS, and systemd-cryptenroll works generally well in setups where the primary volume is either unencrypted or the prompt for one primary passphrase is part of strategy. What if you need both?
+If you are in a situation like me where you cannot move away from default initramfs to dracut, after many burned hours you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only the primary filesystem volume encrypted with LUKS, and systemd-cryptenroll works generally well in setups where the primary volume is either unencrypted or the prompt for one primary passphrase is part of strategy. What if you need to unlock on boot all volumes?
 
 ## Workaround
 
-The party trick is to simply **use clevis and systemd-cryptenroll simultaneously** for primary and secondery LUKS volumes respecively. As it turns out, clevis and systemd-cryptenroll have no problem co-existing and both executing in initramfs during boot.
+The party trick is to **use clevis and systemd-cryptenroll simultaneously** for primary and secondery LUKS volumes respecively. As it turns out, clevis and systemd-cryptenroll have no problem co-existing and both executing in initramfs during boot.
 
 ## Disclaimer
 
@@ -41,7 +41,7 @@ Assuming your `/etc/crypttab` is already populated, add `tpm2-device=auto` for e
 nvme1n1p1_crypt UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx none luks,tpm2-device=auto,discard
 ```
 
-The name and UUID should match your specific volumes. Skip the primary LUKS volume, we will deal with that one later.
+The name and UUID should match your specific volumes. Skip the primary LUKS volume, we will bind it with clevis later.
 
 ### 3. Update initramfs
 
@@ -55,7 +55,7 @@ Once done you can condirm that the auto unlock of secondary LUKS volumes works b
 
 ### 4. Install clevis
 
-The magic trick to get the primary LUKS volume unlocked on boot with TPM is to use clevis as fallback. First, we install the needed libraries:
+Now the party trick - get the primary LUKS volume unlocked on boot with TPM is to use clevis as fallback. First, we install the needed libraries:
 
 ```
 sudo apt-get -y install clevis clevis-tpm2 clevis-luks clevis-initramfs initramfs-tools tss2
@@ -65,7 +65,7 @@ What's important here is that we are not downloading and using dracut that would
 
 ### 5. Use clevis to bind the primary LUKS volume
 
-We do this step only for the primary LUKS volume, not already covered by `systemd-cryptenroll`:
+We do this step only for the primary LUKS volume with the root filesystem, not already covered by `systemd-cryptenroll`:
 
 ```
 sudo clevis luks bind -d /dev/nvme2n1p3 tpm2 '{"key":"rsa", "pcr_bank":"sha256", "pcr_ids":"1,7"}'
