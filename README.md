@@ -1,6 +1,6 @@
 # Unlock primary and secondary LUKS volumes on boot with TPM
 
-Simplified guide to enable auto unlock multiple luks volumes with clevis and systemd-cryptenroll on boot.
+Simplified guide to auto unlock primary and secondary LUKS volumes with TPM using clevis and systemd-cryptenroll on boot, without dracut.
 
 ## Who is it for
 
