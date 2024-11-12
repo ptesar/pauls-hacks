@@ -33,7 +33,7 @@ sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=1+7 /dev/sdaX
 
 Adjust the PCR banks to your needs. You will be propted for your current LUKS key.
 
-### 2. Add TPM device parameter to /etc/crypttab volume entries
+### 2. Add TPM device option to /etc/crypttab volume entries
 
 Assuming your `/etc/crypttab` is already populated, add `tpm2-device=auto` for each for each secondary LUKS volume. For example:
 
@@ -96,6 +96,8 @@ I consider this workaround to be a short lived fix, I expect the systemd-crypten
 ## Useful links
 
  - [AskUbuntu: LUKS + TPM2 + auto unlock at boot (systemd-cryptenroll)](https://askubuntu.com/a/1475182) Ionel P's described in a clear and concise format how to enable clevis unlocking with TPM with clevis-initramfs.
+ - [Lauchpad bug 1980018: Cryptsetup-initramfs cant deal with tpm2-device option](https://bugs.launchpad.net/ubuntu/+source/cryptsetup/+bug/1980018) Chris Hall identifies tpm2-device option bug for root filesystem in /etc/crypttab.
+ - [Fedora Magazine: Automatically decrypt your disk using TPM2](https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/) An excellent in-depth article by Alexander Wellbrock describing the same method, that I found after discovering the workaround. 
 
 
 
