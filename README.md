@@ -7,14 +7,14 @@ Anyone who needs to unlock multiple LUKS partitions on Debian 12 systems without
 
 ## Background
 
-The workaround addresses the following limitations of buggy implementations for LUKS volume unlocking with TPM on boot:
+The workaround addresses the following limitations of buggy implementations of LUKS unlocking with TPM on boot:
 
 1. Clevis unlocks only the root partition on boot with TPM, secondary partitions require passphrase prompts
 2. Interestingly systemd-cryptenroll unlocks only secondary partions due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition
 
 ## Workaround
 
-If you are in a situation like me where you cannot move away from default initramfs in favor of dracut, you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only one LUKS encrypted volume. 
+If you are in a situation like me where you cannot move away from default initramfs in favor of dracut, you likely found yourself stuck with clevis or systemd-cryptenroll. Clevis works great for setups with only the primary volume encrypted with LUKS, and systemd-cryptenroll works generally well in setups where the primary volume is either unencrypted or the prompt for one primary passphrase is part of strategy. What if you need both? The trick is to simply use clevis and systemd-cryptenroll simultaneously. As it turns out, they have no problem co-existing and both executing in initramfs. 
 
 ### 1. Use systemd-cryptenroll for secondary partitions
 
@@ -74,4 +74,22 @@ Once you bind the primary LUKS volume with clevis update the initramfs:
 sudo update-initramfs -u
 ```
 
+### 7. Reboot
+
 Confirm that the system auto unlocks all LUKS volumes works by rebboting your system.
+
+## Other options
+
+There other options available to you if you don't mind touching your system files, one to look at is [systemd_with_tpm2](https://github.com/wmcelderry/systemd_with_tpm2) patch created by [wmcelderry](https://github.com/wmcelderry). If you can live with dracut, then there is an excellent post [Debian with LUKS and TPM auto decryption](https://blog.fernvenue.com/archives/debian-with-luks-and-tpm-auto-decryption/) on fernvenue.
+
+## Notes
+
+I consider this workaround to be a short lived fix, I expect the systemd-cryptenroll to eventually address the `tpm2-device=` bug, rendering the need for this workaround obsolete.
+
+## Useful links
+
+ - [AskUbuntu: LUKS + TPM2 + auto unlock at boot (systemd-cryptenroll)](https://askubuntu.com/a/1475182) Ionel P's described in a clear and concise format how to enable clevis unlocking with TPM with clevis-initramfs.
+
+
+
+
