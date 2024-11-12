@@ -3,14 +3,14 @@ Simplified guide to enable auto unlock multiple luks partitions with initramfs a
 
 ## Who is this for
 
-For anypne who needs to unlock multiple LUKS partitions on Debian 12 systems without switching initramfs to dracut.
+Anyone who needs to unlock multiple LUKS partitions on Debian 12 systems without switching from initramfs to dracut.
 
-## Backround
+## Backrgound
 
-The workaround addresses the following limitations of buggy implementations:
+The workaround addresses the following limitations of buggy implementations for LUKS volume unlocking with TPM on boot:
 
-1. Clevis unlocks only the root partition on boot with TPM, secondary partitions require passphrase prompt
-2. Interestingly systemd-cryptenroll unlocks only secondary partions due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition.
+1. Clevis unlocks only the root partition on boot with TPM, secondary partitions require passphrase prompts
+2. Interestingly systemd-cryptenroll unlocks only secondary partions due to a bug that ignores `tpm2-device=` option in `/etc/crypttab` for root partition
 
 ## Workaround
 
