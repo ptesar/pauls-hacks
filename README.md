@@ -31,7 +31,7 @@ Enroll all secondary volumes with `systemd-cryptenroll`, replace `/dev/sdaX` wit
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=1+7 /dev/sdaX
 ```
 
-Adjust the PCR banks to your needs. You will be propted for your current LUKS key.
+Adjust the PCR banks to your needs. You will be propted for your current LUKS passphrase.
 
 ### 2. Add TPM device option to /etc/crypttab volume entries
 
