@@ -1,0 +1,18 @@
+*.suo
+*.cache
+*.user
+*.old
+*.bak
+*.mwb.beforefix
+coverage.json
+
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/.settings
+**/.idea
+
+# NuGet
+**/packages
+**/.nuget
