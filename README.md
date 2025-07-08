@@ -8,11 +8,11 @@ Unorganized collection of workarounds and configuration steps for linux based sy
  
 Simplified guide to auto unlock primary and secondary LUKS volumes with TPM using clevis and systemd-cryptenroll on boot, without dracut.
 
-## OpenMediaVault
+## Host Provisioning
 
- ### [Fix for OpenMediaVault hanging during installation from official iso image](./open-media-vault-7-installation-hangs.md)
- 
-Simple one liner for boatloader gets around blocking IPv6 autoconfiguration when IPv6 network is not available.
+ ### [Provision .NET and PostgreSQL on Debian 12 Systems](./provision-dotnet-and-posgresql-debian-12)
+
+ Step by step guide to provision .NET runtime and PosgreSQL for self sufficient web application hosting on Debian 12 systems.
 
 ## Disclaimer
 
