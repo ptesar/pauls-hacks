@@ -10,7 +10,7 @@ Simplified guide to auto unlock primary and secondary LUKS volumes with TPM usin
 
 ## Host Provisioning
 
- ### [Provision .NET and PostgreSQL on Debian 12 Systems](./provision-dotnet-and-posgresql-debian-12)
+ ### [Provision .NET and PostgreSQL on Debian 12 Systems](./provision-dotnet-and-posgresql-debian-12.md)
 
  Step by step guide to provision .NET runtime and PosgreSQL for self sufficient web application hosting on Debian 12 systems.
 
