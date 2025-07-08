@@ -121,7 +121,7 @@ Add the following line to IPV6 location connections:
 
 ```conf
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
-hostssl all             all             ::                      scram-sha-256
+hostssl all             all             ::/0                    scram-sha-256
 ```
 
 The resulting configuration should be:
