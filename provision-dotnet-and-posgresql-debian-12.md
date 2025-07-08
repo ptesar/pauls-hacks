@@ -38,7 +38,7 @@ Install the package, change the version for your usecase:
 sudo apt-get install -y aspnetcore-runtime-8.0
 ```
 
-## PosgreSQL
+## PostgreSQL
 
 ### 1. Update Package Lists
 
